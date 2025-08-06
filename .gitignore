@@ -1,3 +1,16 @@
+# Hidden
+.venv
+.env
+
+# Data
+*.csv
+*.json
+*.geojson
+
+# MAC
+
+.DS_Store
+
 # Logs
 logs
 *.log

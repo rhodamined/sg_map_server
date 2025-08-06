@@ -1,4 +1,10 @@
 
+// Pull all data from API every hour, parse into single json file
+// Create folder for the day and write file
+// File name to include timestamp of the hour
+
+
+
 // import carpark.js 
 const carparks = require("./carpark");
 

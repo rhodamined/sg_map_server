@@ -18,6 +18,7 @@
   "homepage": "https://github.com/rhodamined/sg_map_server#readme",
   "dependencies": {
     "dotenv": "^17.2.1",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "node-cron": "^4.2.1"
   }
 }

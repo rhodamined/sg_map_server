@@ -1,0 +1,23 @@
+{
+  "name": "sg_map_server",
+  "version": "1.0.0",
+  "description": "Cron server to pull and save SG realtime data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhodamined/sg_map_server.git"
+  },
+  "author": "Christina Tang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rhodamined/sg_map_server/issues"
+  },
+  "homepage": "https://github.com/rhodamined/sg_map_server#readme",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0"
+  }
+}

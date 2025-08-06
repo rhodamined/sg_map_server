@@ -5,17 +5,15 @@
 
 const express = require("express");
 const dotenv = require("dotenv");
-
-require("./server/scheduler");
-
 dotenv.config();
+
+
 const app = express();
 const port = process.env.PORT || 6001;
 
 
-// account key for SG datamall
-// https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
-const ACCT_KEY = process.env.ACCOUNT_KEY;
+// includes node-cron scheduler, which continues running in background
+require("./server/scheduler");
 
 
 /* -------------------- */
@@ -26,7 +24,6 @@ app.use(express.json());
 
 app.listen(port, async () => {
     console.log("Server running at port: " + port);
-    await getAllCarparks();
 })
 
 
@@ -36,6 +33,7 @@ app.listen(port, async () => {
 /* API REQUEST           
 /* -------------------- */
 
+/*
 async function getAllCarparks() {
     let carparks = [];
     skip = 0;
@@ -84,3 +82,5 @@ async function fetchCarpark(url) {
         })
         .catch((error) => console.error(error));
 }
+
+*/

@@ -1,3 +1,13 @@
+
+// import carpark.js 
+const carparks = require("./carpark");
+
+(async function() {
+    await carparks.getAllCarparks();
+})();
+
+
+
 const cron = require("node-cron");
 
 const task = () => {

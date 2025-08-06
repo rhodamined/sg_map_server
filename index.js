@@ -18,11 +18,11 @@ app.use(express.json());
 require("./server/scheduler");
 
 
+
+
 /* -------------------- */
 /* SERVER        
 /* -------------------- */
-
-
 
 app.listen(port, async () => {
     console.log("Server running at port: " + port);

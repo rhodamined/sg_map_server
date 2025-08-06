@@ -64,11 +64,3 @@ async function fetchCarpark(url) {
         })
         .catch((error) => console.error(error));
 }
-
-
-// function: make directory for the day
-
-// function: save file to directory 
-// --- if directory for the day does not exist, make it
-// --- make timestamp for the day and hour
-

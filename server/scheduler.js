@@ -31,6 +31,7 @@ cron.schedule("0,15,30,45 */1 * * *", saveCarparksJSON);
 // IIFE FOR TESTING
 // (async function() {
 //     console.log("IIFE");
+//     await saveCarparksJSON();
 // })();
 
 
@@ -41,15 +42,15 @@ async function task() {
 
 // ACTUAL TASK
 async function saveCarparksJSON() {
-    const fileStr = getFileString();
+    const fileStr = await getFileString();
 
     console.log("Running a scheduled job at " + new Date());
 
     let data = await carparks.getAllCarparks();
-    const payload = {timestamp: sgtime.getISOString(), value: data}
-    writeFile(fileStr, payload);
+    const payload = {timestamp: sgtime.getISOString(), value: data} // getISOString() timestamps when request complete
+    await writeFile(fileStr, payload);
 
-    console.log("Job complete" + new Date());
+    console.log("Job completed at " + new Date());
 }
 
 
@@ -71,9 +72,11 @@ async function writeFile (file_str, payload) {
 }
 
 function getFileString() {
-    const date = sgtime.getYYYYMMDD();
-    const hhmm = sgtime.getHHMM();
-    const str = `./data/${date}/${date}T${hhmm}.json`;
+    const d = sgtime.getSGDate();
+    const yyyymmdd = sgtime.getYYYYMMDD(d);
+    const hh = sgtime.getHH(d);
+    const mm = sgtime.getMM(d);
+    const str = `./data/${yyyymmdd}/${yyyymmdd}_${hh}-${mm}.json`;
 
     return str;
 }

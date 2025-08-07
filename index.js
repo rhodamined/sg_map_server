@@ -16,7 +16,7 @@ app.use(express.json());
 // Node-cron scheduler, which continues running in background
 // Pulls and saves data every hour
 require("./server/scheduler");
-
+require("./server/process");
 
 
 

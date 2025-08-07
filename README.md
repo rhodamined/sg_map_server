@@ -17,6 +17,6 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 
 
 ## Usage
-- `/update/` to have the server refresh data
+- `/update` to have the server refresh data
 - `/kml/x` where x is 1 through 332 to retrieve data for each kml
 - `/region/y` where y is 0 through 4 to retrieve data for each administrative region

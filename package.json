@@ -11,7 +11,7 @@
     "url": "git+https://github.com/rhodamined/sg_map_server.git"
   },
   "author": "Christina Tang",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/rhodamined/sg_map_server/issues"
   },

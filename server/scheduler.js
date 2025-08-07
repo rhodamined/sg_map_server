@@ -26,7 +26,7 @@ async function task() {
 }
 
 
-// function: make directory for the day
+// function: make directory for the day if one doesn't exist, then save file to directory
 
 // function: save file to directory 
 // --- if directory for the day does not exist, make it

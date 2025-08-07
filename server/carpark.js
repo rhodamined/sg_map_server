@@ -52,7 +52,7 @@ async function fetchCarpark(url) {
         redirect: "follow"
     };
 
-    return fetch(url, requestOptions)
+    return await fetch(url, requestOptions)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

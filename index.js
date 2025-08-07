@@ -26,7 +26,10 @@ const p = require("./server/process");
 
 app.listen(port, async () => {
     console.log("Server running at port: " + port);
+    
     //get availability on spinup
+    global.avails = await p.getAvailability();
+    res.json(global.avails['timestamp']);
 })
 
 

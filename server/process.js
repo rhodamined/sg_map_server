@@ -20,7 +20,7 @@ const fse = require('fs-extra');
 async function getAvailability() {
 
     const filepath_carparkIDs = "./ref/SG_carpark_IDs.json"
-    const filepath_data = "./data/2025-08-08/2025-08-08_01-30.json"
+    const filepath_data = "./data/carpark_availability/2025-08-08/2025-08-08_04-15.json"
 
     // using arrays as lookups; e.g. use arr[kml#] to get availability within kml#
     let kml_arr = new Array(333).fill(0); // total 332 subzones, +1 bc not using index 0

@@ -15,6 +15,9 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 ## Run
 - `node index.js` from the root folder to launch the express app. 
 
+## Data
+- All logged files save locally to folder /data. `.gitignore` is configured to ignore folder `/data` so as not to push 100s of MB to this repo. Please do not change this behavior; if you need to add a reference file, put it in /ref. 
+
 
 ## Usage
 - `/update` to have the server refresh data

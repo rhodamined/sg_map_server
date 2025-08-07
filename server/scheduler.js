@@ -42,7 +42,7 @@ async function task() {
 
 // ACTUAL TASK
 async function saveCarparksJSON() {
-    const fileStr = await getFileString();
+    const fileStr = getFileString();
 
     console.log("Running a scheduled job at " + new Date());
 

@@ -1,8 +1,10 @@
 module.exports = {
+    getSGDate,
     getYYYYMMDD,
     getHHMMSS,
     getHHMM,
     getHH,
+    getMM,
     getISOString
 }
 
@@ -10,9 +12,16 @@ module.exports = {
 /* Cast all date time to Singapore time (SST)      
 /* ------------------------------------------------ */
 
-function getYYYYMMDD() {
+function getSGDate() {
     // https://stackoverflow.com/questions/11124322/get-date-time-for-a-specific-time-zone-using-javascript
-    let time_now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"})); // timezone ex: Asia/Jerusalem
+    return new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"})); 
+}
+
+function getYYYYMMDD(d) {
+    let time_now = d;
+    if (!time_now) {
+        time_now = getSGDate();
+    }
     const year = time_now.getFullYear();
     const date = time_now.getDate(); 
     const month = time_now.getMonth()+1; // base function returns 0 to 11
@@ -21,9 +30,12 @@ function getYYYYMMDD() {
     return yyyymmdd;
 }
 
-function getHHMMSS() {
-    // https://stackoverflow.com/questions/11124322/get-date-time-for-a-specific-time-zone-using-javascript
-    let time_now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"})); // timezone ex: Asia/Jerusalem
+function getHHMMSS(d) {
+    
+    let time_now = d;
+    if (!time_now) {
+        time_now = getSGDate();
+    }
     const hour = time_now.getHours(); // base function returns 0 to 23
     const min = time_now.getMinutes(); // base function returns 0 to 59
     const sec = time_now.getSeconds(); // base function returns 0 to 59
@@ -33,9 +45,12 @@ function getHHMMSS() {
 }
 
 
-function getHHMM() {
-    // https://stackoverflow.com/questions/11124322/get-date-time-for-a-specific-time-zone-using-javascript
-    let time_now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"})); // timezone ex: Asia/Jerusalem
+function getHHMM(d) {
+    
+    let time_now = d;
+    if (!time_now) {
+        time_now = getSGDate();
+    }
     const hour = time_now.getHours(); // base function returns 0 to 23
     const min = time_now.getMinutes(); // base function returns 0 to 59
 
@@ -45,13 +60,28 @@ function getHHMM() {
 
 
 
-function getHH() {
-    // https://stackoverflow.com/questions/11124322/get-date-time-for-a-specific-time-zone-using-javascript
-    let time_now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"})); // timezone ex: Asia/Jerusalem
+function getHH(d) {
+    
+    let time_now = d;
+    if (!time_now) {
+        time_now = getSGDate();
+    }
     const hour = time_now.getHours(); // base function returns 0 to 23
 
     let hh = `${twoDigit(hour)}`;
     return hh;
+}
+
+function getMM(d) {
+    
+    let time_now = d;
+    if (!time_now) {
+        time_now = getSGDate();
+    }
+    const min = time_now.getMinutes(); // base function returns 0 to 23
+
+    let mm = `${twoDigit(min)}`;
+    return mm;
 }
 
 
@@ -59,9 +89,13 @@ function getHH() {
 // e.g. for 10:42am EDT == 22:42PM SST, the string would be: 2025-08-07T22:53:38+08:00
 // can be parsed back to correct UTC timestamp using Date(isostring)
 // thank god SG does not do daylight savings
-function getISOString() {
-    // https://stackoverflow.com/questions/11124322/get-date-time-for-a-specific-time-zone-using-javascript
-    let time_now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"})); // timezone ex: Asia/Jerusalem
+function getISOString(d) {
+    
+    let time_now = d;
+    if (!time_now) {
+        time_now = getSGDate();
+    }
+
     const year = time_now.getFullYear();
     const date = time_now.getDate(); 
     const month = time_now.getMonth()+1; // base function returns 0 to 11

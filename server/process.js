@@ -2,9 +2,11 @@ module.exports = {
     getAvailability
 }
 
-// read json for specific timestamp
-// return js object of carpark availability by kml and by region
+/* -------------------------------------------------------------- */
+/* Return js object of carpark availability by kml and by region     
+/* -------------------------------------------------------------- */
 
+// import libraries
 const fse = require('fs-extra');
 
 
@@ -19,13 +21,11 @@ async function getAvailability() {
 
     const filepath_carparkIDs = "./ref/SG_carpark_IDs.json"
     const filepath_data = "./data/2025-08-08/2025-08-08_01-30.json"
-    const total_subzones = 332;
-    const total_regions = 5;
 
-    let kml_arr = new Array(total_subzones+1).fill(0); // not using index 0
-    let region_arr = new Array(total_regions).fill(0);
+    // using arrays as lookups; e.g. use arr[kml#] to get availability within kml#
+    let kml_arr = new Array(333).fill(0); // total 332 subzones, +1 bc not using index 0
+    let region_arr = new Array(5).fill(0);
 
-    
     const carpark_lookup = await readJSONFile(filepath_carparkIDs); //keys are carpark IDs
     const carpark_data = await readJSONFile(filepath_data);
     const carpark_values = carpark_data['value'];
@@ -38,7 +38,7 @@ async function getAvailability() {
         // get the id number of this lot
         let id = e['CarParkID'];
 
-        // get the availability of this lot
+        // get the availability at this lot
         let avail = e['AvailableLots'];
 
         // if this lot ID is included in the lookup table
@@ -56,29 +56,25 @@ async function getAvailability() {
         }
 
     }
-
-    // console.log(kml_arr);
-    // console.log(region_arr);
     
     let obj = {
         'raw': {
             'by_kml': kml_arr,
             'by_region': region_arr
+        },
+        'normalized': {
+            'by_kml': [],
+            'by_region': []
         }
     }
 
     return obj;
 }
 
-// read json for carpark ids
-
+// read JSON using fs-extra
 async function readJSONFile(path) {
   try {
     const payload = await fse.readJson(path)
-
-    // console.log(packageObj['Y64M'])
-    // console.log(payload['value'][0]);
-
     return (payload)
 
   } catch (err) {

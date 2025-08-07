@@ -13,7 +13,7 @@ const fse = require('fs-extra');
 // IIFE FOR TESTING
 (async function() {
     const raw_avail = await getAvailability();
-    console.log(raw_avail);
+    // console.log(raw_avail);
 })();
 
 
@@ -58,6 +58,7 @@ async function getAvailability() {
     }
     
     let obj = {
+        'timestamp': carpark_data['timestamp'],
         'raw': {
             'by_kml': kml_arr,
             'by_region': region_arr

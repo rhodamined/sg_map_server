@@ -4,7 +4,7 @@
 
 # Data
 *.csv
-*data/.json
+/data
 *.geojson
 
 # MAC

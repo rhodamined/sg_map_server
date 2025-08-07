@@ -1,19 +1,16 @@
 module.exports = {
-    tester,
     getAllCarparks
 }
 
-
-// The below is loaded in index.js with dotenv.config()
-// Account key for SG datamall
+/* ------------------------------------------------ */
+/* API Calls to Singapore Datamall - Carparks     
+/* ------------------------------------------------ */
 // https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf
+
+
+// Account key for SG datamall; previously loaded in index.js with dotenv.config()
 const ACCT_KEY = process.env.ACCOUNT_KEY;
 
-
-/* ---- TEST FUNCTION ---- */
-async function tester() {
-    console.log("test good");
-}
 
 /* ---- PULL ALL RESPONSES FROM API, CONCAT AND RETURN ---- */
 async function getAllCarparks() {

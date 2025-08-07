@@ -1,7 +1,10 @@
-
+/* ------------------------------------------------ */
+/* Node-Cron scheduler to pull & save JSON    
+/* ------------------------------------------------ */
 // Pull all data from API every hour, parse into single json file
 // Create folder for the day and write file
 // File name to include timestamp of the hour
+
 
 // import my modules
 const carparks = require("./carpark");
@@ -12,30 +15,42 @@ const cron = require("node-cron");
 const fse = require('fs-extra');
 
 
+/* ------------------------------------------------ */
+/* Scheduler Task   
+/* ------------------------------------------------ */
+// use https://crontab.guru/ to make expression for scheduling
+// "* * * * *" is for every minute
+// "0,15,30,45 */1 * * *" is "At minute 0, 15, 30, and 45 past every hour"
+
+// cron.schedule("* * * * *", task); // tester scheduler
+cron.schedule("0,15,30,45 */1 * * *", saveCarparksJSON);
+
+
+/* ------ HELPERS ------- */
+
 // IIFE FOR TESTING
-(async function() {
-
-    let testtime = sgtime.getISOString();
-    console.log(testtime);
-    let newtime = new Date(testtime);
-    console.log(newtime);
-    // await carparks.getAllCarparks();
-
-    const fileStr = getFileString();
-    const payload = {timestamp: sgtime.getISOString(), value: [1, 2, 3]}
-    writeFile(fileStr, payload);
-})();
+// (async function() {
+//     console.log("IIFE");
+// })();
 
 
 // TESTER TASK
 async function task() {
-
     console.log("Running a scheduled job at " + new Date());
 }
 
+// ACTUAL TASK
+async function saveCarparksJSON() {
+    const fileStr = getFileString();
 
+    console.log("Running a scheduled job at " + new Date());
 
-// function: make directory for the day if one doesn't exist, then save file to directory
+    let data = await carparks.getAllCarparks();
+    const payload = {timestamp: sgtime.getISOString(), value: data}
+    writeFile(fileStr, payload);
+
+    console.log("Job complete" + new Date());
+}
 
 
 // fs-extra library 
@@ -47,8 +62,8 @@ async function writeFile (file_str, payload) {
     await fse.outputJson(file_str, payload)
 
     // read it back to log it
-    const data = await fse.readJson(file_str)
-    console.log(data) 
+    // const data = await fse.readJson(file_str)
+    // console.log(data) 
 
   } catch (err) {
     console.error(err)
@@ -57,22 +72,10 @@ async function writeFile (file_str, payload) {
 
 function getFileString() {
     const date = sgtime.getYYYYMMDD();
-    const hr = sgtime.getH();
-    const str = `./data/${date}/${date}T${hr}.json`
+    const hhmm = sgtime.getHHMM();
+    const str = `./data/${date}/${date}T${hhmm}.json`;
 
     return str;
 }
 
 
-// function: save file to directory 
-// --- if directory for the day does not exist, make it
-// --- make timestamp for the day and hour
-
-
-
-
-// use https://crontab.guru/ to make expression for scheduling
-// "* * * * *" is for every minute
-
-// "0,15,30,45 */1 * * *" is "At minute 0, 15, 30, and 45 past every hour"
-cron.schedule("* * * * *", task);

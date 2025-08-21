@@ -29,7 +29,7 @@ app.listen(port, async () => {
     
     //get availability on spinup
     global.avails = await p.getAvailability();
-    res.json(global.avails['timestamp']);
+    // res.json(global.avails['timestamp']);
 })
 
 

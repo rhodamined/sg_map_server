@@ -15,33 +15,59 @@ const sgtime = require("./sgtime");
 const cron = require("node-cron");
 const fse = require('fs-extra');
 
+// use to fire python
+const { spawn } = require('child_process');
+
+
+// IIFE FOR TESTING
+(async function() {
+    console.log("IIFE");
+    runPythonScript();
+})();
+
 
 /* ------------------------------------------------ */
 /* Scheduler Task   
 /* ------------------------------------------------ */
 // use https://crontab.guru/ to make expression for scheduling
-// "* * * * *" is for every minute
-// "0,15,30,45 */1 * * *" is "At minute 0, 15, 30, and 45 past every hour"
 
 // cron.schedule("* * * * *", task); // tester scheduler
-cron.schedule("0,15,30,45 */1 * * *", saveToJSON);
+cron.schedule("0,15,30,45 */1 * * *", saveAPIDataToJSON);
+
+// schedule python consolidation script every day at 00:05
+// '1 0 * * *'
+// cron.schedule('* * * * *', runPythonScript);
 
 
-/* ------ HELPERS ------- */
+async function runPythonScript() {
+    console.log('Running Python script...');
 
-// IIFE FOR TESTING
-// (async function() {
-//     console.log("IIFE");
-// })();
+    // Yesterday
+    const yesterday = new Date(Date.now() - 86400000);
+    const yyyymmdd = sgtime.getYYYYMMDD(yesterday);
 
+    // Spawn a child process to execute the Python script
+    const pythonProcess = spawn('python3', ['./python_scripts/carpark_led_csv_and_json.py', yyyymmdd]);
 
-// Tester task
-async function task() {
-    console.log("Running a scheduled job at " + new Date());
+    // Handle stdout from the Python script
+    pythonProcess.stdout.on('data', (data) => {
+        console.log(`Python script output: ${data.toString()}`);
+    });
+
+    // Handle stderr from the Python script
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`Python script error: ${data.toString()}`);
+    });
+
+    // Handle process exit
+    pythonProcess.on('close', (code) => {
+        console.log(`Python script exited with code ${code}`);
+    });
+    
 }
 
 // Save logs to file
-async function saveToJSON() {
+async function saveAPIDataToJSON() {
 
     // Use same file structure and file name for every log; preserves on-the-minute log
     // Differentiated only by file tree
@@ -71,6 +97,13 @@ async function saveToJSON() {
     console.log("Subway crowdedness log completed at " + new Date());
 
 }
+
+
+// Tester task
+async function task() {
+    console.log("Running a scheduled job at " + new Date());
+}
+
 
 
 // fs-extra library 

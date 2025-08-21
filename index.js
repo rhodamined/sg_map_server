@@ -16,56 +16,55 @@ app.use(express.json());
 // Node-cron scheduler, which continues running in background
 // Pulls and saves data every hour
 require("./server/scheduler");
-const p = require("./server/process");
+const p = require("./old/process");
+
+// Help with time formating
+const sgtime = require("./server/sgtime");
+
+// file system
+const fs = require('fs');
 
 
 
 /* -------------------- */
 /* SERVER        
 /* -------------------- */
-
 app.listen(port, async () => {
     console.log("Server running at port: " + port);
-    
-    //get availability on spinup
-    global.avails = await p.getAvailability();
-    // res.json(global.avails['timestamp']);
+
 })
 
 
-// Refresh local variables
-app.get('/update', async (req, res) => {
-  console.log("update");
-  // write to global variable
-  global.avails = await p.getAvailability();
-  res.json(global.avails['timestamp']);
+// 
+app.get('/hello', async (req, res) => {
+  console.log("/hello");
+
+  const yesterday = new Date(Date.now() - 86400000);
+  const yyyymmdd = sgtime.getYYYYMMDD(yesterday);
+  const filePath = __dirname + `/output/json/${yyyymmdd}.json`;
+
+  // if no file exists for date string, serve up a hard-coded file with good data
+  const contingency = '2025-08-11' // fake it
+
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+          console.error(`${filePath} does not exist. Serving ${contingency} instead.\n`, err);
+          res.sendFile(__dirname + `/output/json/${contingency}.json`);
+      } else {
+          res.sendFile(filePath);
+      }
+  });
+
 });
 
-
-app.get('/test', async (req, res) => {
-  console.log("test");
-  obj = global.avails;
-  res.json(obj);
-});
 
 
 // get single character info using character NUMBER
 // Updated 12/26/23
-app.get('/kml/:kml', async (req, res) => {
-  const kml = parseInt(req.params.kml);
-  const val = global.avails['raw']['by_kml'][kml];
+// app.get('/region/:region', async (req, res) => {
+//   const region = parseInt(req.params.region);
+//   const val = global.avails['raw']['by_region'][region];
 
-  console.log("kml: " + kml + ", availability: " + val);
-  res.json(val);
-});
-
-
-// get single character info using character NUMBER
-// Updated 12/26/23
-app.get('/region/:region', async (req, res) => {
-  const region = parseInt(req.params.region);
-  const val = global.avails['raw']['by_region'][region];
-
-  console.log("region: " + region + ", availability: " + val);
-  res.json(val);
-});
+//   console.log("region: " + region + ", availability: " + val);
+//   res.json(val);
+// });

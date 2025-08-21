@@ -15,15 +15,15 @@ const sgtime = require("./sgtime");
 const cron = require("node-cron");
 const fse = require('fs-extra');
 
-// use to fire python
+// use to run python
 const { spawn } = require('child_process');
 
 
 // IIFE FOR TESTING
-(async function() {
-    console.log("IIFE");
-    runPythonScript("2025-08-11");
-})();
+// (async function() {
+//     console.log("IIFE");
+//     runPythonScript("2025-08-11");
+// })();
 
 
 /* ------------------------------------------------ */
@@ -31,24 +31,23 @@ const { spawn } = require('child_process');
 /* ------------------------------------------------ */
 // use https://crontab.guru/ to make expression for scheduling
 
-// cron.schedule("* * * * *", task); // tester scheduler
+// Every 15 minutes, poll Datamall API for carpark and suwbay data and save results to /data
 cron.schedule("0,15,30,45 */1 * * *", saveAPIDataToJSON);
 
-// schedule python consolidation script every day at 00:05
-// '1 0 * * *'
-// cron.schedule('* * * * *', runPythonScript);
+// Every day at 00:01, process entire previous day's worth of data into a csv and json
+cron.schedule('1 0 * * *', runPythonScript);
 
-
+// optional to pass date_str
+// if called without an arg, defaults to 'yesterday'
 async function runPythonScript(date_str) {
     console.log('Running Python script...');
 
     let yyyymmdd;
     if (!date_str) {
-      // if a date string is passed, use that
       const yesterday = new Date(Date.now() - 86400000);
       yyyymmdd = sgtime.getYYYYMMDD(yesterday);  
     } else {
-      yyyymmdd = date_str
+      yyyymmdd = date_str;
     }
     // Yesterday
 

@@ -1,6 +1,7 @@
 # Hidden
 .venv
 .env
+/old
 
 # Data
 /data

@@ -20,6 +20,30 @@ if __name__ == "__main__":
         print(f"Argument 1: {sys.argv[1]}")
         
         # ------------------------------------------------ #
+        # CONFIG DIRECTORY & FILE PATHS
+        # ------------------------------------------------ #
+        # Received date to process as an argument in format 'yyyy-mm-dd' e.g. '2025-08-11' for August 11, 2025
+        date_str = sys.argv[1]
+        
+        # directory to iterate over
+        carpark_directory = Path('./data/carpark_availability/' + date_str)  # set directory path
+
+        # path to ref: carpark IDs
+        path_to_carpark_ids = './ref/SG_carpark_IDs.json'
+        
+        # path to ref: subzone kml ref by region
+        path_to_subzone_kml_ref_by_region = './ref/subzone_kml_ref_by_region.csv'
+        
+        # path to save csv
+        path_to_save_csv = './output/csv/' + date_str + '.csv'
+        
+        # path to save json
+        path_to_save_json = './output/json/' + date_str + '.json'
+        
+        # path to save logs
+        path_to_output_log = './output/log.txt'
+        
+        # ------------------------------------------------ #
         # READ FILES
         # ------------------------------------------------ #
         # Open the JSON file in read mode ('r')
@@ -62,15 +86,10 @@ if __name__ == "__main__":
 
         # Read in all files from directory and concat into single dataframe
         # Even for a single day it's kind of big, might take a second
-        root_dir = './data/carpark_availability/'
-        
-        # date_str = '2025-08-11' #example
-        date_str = sys.argv[1]
-        directory = Path(root_dir + date_str)  # set directory path
 
         li = []
 
-        for file in directory.iterdir():  
+        for file in carpark_directory.iterdir():  
             if file.is_file():  # Check if it's a file
                 df = read_json_to_pd(file)
                 li.append(df)
@@ -113,7 +132,7 @@ if __name__ == "__main__":
         # IMPORT REFERENCE JSON OF CARPARK-KML & MERGE
         # ------------------------------------------------ #
         # triggers a ton of warnings but works
-        ref_kml = pd.read_json('./output/SG_carpark_IDs.json', orient='index')
+        ref_kml = pd.read_json(path_to_carpark_ids, orient='index')
         ref_kml = ref_kml.reset_index()
         ref_kml = ref_kml.rename(columns={"index": "id"})
         
@@ -142,7 +161,7 @@ if __name__ == "__main__":
         # ------------------------------------------------ #
         # IMPORT CSV REFERENCE OF LEDS-KMLS & MERGE
         # ------------------------------------------------ #
-        led_ref = pd.read_csv('./output/subzone_kml_ref_by_region.csv')
+        led_ref = pd.read_csv(path_to_subzone_kml_ref_by_region)
         
         # merge right to preserve ALL LED #s
         # All leds / kmls without hourly lot data will have only 1 row of NAs
@@ -168,9 +187,9 @@ if __name__ == "__main__":
         # ------------------------------------------------ #
         # WRITE DATAFRAME TO CSV
         # ------------------------------------------------ #
-        summary_df.to_csv('./output/led_csv_test.csv', index = False)
+        summary_df.to_csv(path_to_save_csv, index = False)
 
-        print(summary_df[:4])
+        # print(summary_df[:4])
         
         # ------------------------------------------------ #
         # FORMAT TO DICT FOR JSON 
@@ -206,19 +225,16 @@ if __name__ == "__main__":
         # ------------------------------------------------ #
         # WRITE JSON TO FILE 
         # ------------------------------------------------ #
-        # Specify the filename for the JSON output
-        root_dir = './output/carpark/'
-        filename = root_dir + date_str + "_carpark.json"
         
         # Open the file in write mode ("w")
         # The 'with' statement ensures the file is properly closed even if errors occur
-        with open(filename, "w") as json_file:
+        with open(path_to_save_json, "w") as json_file:
             json.dump(jj, json_file, indent=4) 
         
         # ------------------------------------------------ #
         # WRITE LOGS
         # ------------------------------------------------ #
-        with open("log.txt", "a") as f:
+        with open(path_to_output_log, "a") as f:
             f.write(f"Date provided: {sys.argv[1]}\n")
             f.write(f"Python script executed at: {datetime.datetime.now()}\n")
     else:

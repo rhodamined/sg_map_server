@@ -11,15 +11,20 @@ const fse = require('fs-extra');
 
 
 // IIFE FOR TESTING
-(async function() {
-    const raw_avail = await getAvailability();
-    // console.log(raw_avail);
-})();
+// (async function() {
+//     const raw_avail = await getAvailability();
+//     // console.log(raw_avail);
+// })();
 
 
 async function getAvailability() {
 
+    // hardcoded for reference file
     const filepath_carparkIDs = "./ref/SG_carpark_IDs.json"
+
+    // filepath hardcoded for now; will be passed as argument in future
+    // change to the file name of a local logged file
+    // run this server for a while to download some (will save every 15mins)
     const filepath_data = "./data/carpark_availability/2025-08-08/2025-08-08_04-15.json"
 
     // using arrays as lookups; e.g. use arr[kml#] to get availability within kml#

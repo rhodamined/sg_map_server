@@ -22,7 +22,7 @@ const { spawn } = require('child_process');
 // IIFE FOR TESTING
 (async function() {
     console.log("IIFE");
-    runPythonScript();
+    runPythonScript("2025-08-11");
 })();
 
 
@@ -39,12 +39,18 @@ cron.schedule("0,15,30,45 */1 * * *", saveAPIDataToJSON);
 // cron.schedule('* * * * *', runPythonScript);
 
 
-async function runPythonScript() {
+async function runPythonScript(date_str) {
     console.log('Running Python script...');
 
+    let yyyymmdd;
+    if (!date_str) {
+      // if a date string is passed, use that
+      const yesterday = new Date(Date.now() - 86400000);
+      yyyymmdd = sgtime.getYYYYMMDD(yesterday);  
+    } else {
+      yyyymmdd = date_str
+    }
     // Yesterday
-    const yesterday = new Date(Date.now() - 86400000);
-    const yyyymmdd = sgtime.getYYYYMMDD(yesterday);
 
     // Spawn a child process to execute the Python script
     const pythonProcess = spawn('python3', ['./python_scripts/carpark_led_csv_and_json.py', yyyymmdd]);

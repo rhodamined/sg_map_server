@@ -44,6 +44,11 @@ if __name__ == "__main__":
         path_to_output_log = './output/log.txt'
         
         # ------------------------------------------------ #
+        # CONFIG TOLERANCE
+        # ------------------------------------------------ #
+        tolerance = 0.8
+        
+        # ------------------------------------------------ #
         # READ FILES
         # ------------------------------------------------ #
         # Open the JSON file in read mode ('r')
@@ -91,12 +96,45 @@ if __name__ == "__main__":
 
         for file in carpark_directory.iterdir():  
             if file.is_file():  # Check if it's a file
-                df = read_json_to_pd(file)
-                li.append(df)
+                mm = file.name.split('.')[0].split('-')[-1]
+                minute_range = ["00", "15", "30", "45"]  # specifically opt into the timestamps...
+
+                if mm in minute_range:
+                    df = read_json_to_pd(file)
+                    li.append(df)
                 
         carpark_all = pd.concat(li, axis=0, ignore_index=True)
+        
         # print(carpark_all[:4])
         
+        # ------------------------------------------------ #
+        # DATA VALIDATIOM
+        # Check if each ID has 24hrs of info
+        # ingesting more data is good -- sometimes records missing, ends up taking the average over an hour
+        # ------------------------------------------------ #
+        # Remove duplicates
+        carpark_all.drop_duplicates(subset=['CarParkID', 'LotType', 'hour', 'minute'], keep="first", inplace=True)
+        orig_id_total = len(carpark_all['CarParkID'].unique()) # to calculate percentage
+
+        # Find every carpark record that does NOT have 24hrs worth of data, and remove it
+        to_remove = carpark_all.drop_duplicates(subset=['CarParkID', 'LotType', 'hour'], keep="first")
+        to_remove = to_remove.groupby(['CarParkID', 'LotType']).size()
+        to_remove = pd.DataFrame(to_remove)
+        to_remove = to_remove[to_remove[0] < 24]
+        to_remove = to_remove.reset_index()
+
+        # Filter carpark_all to keep only rows where carpark id is NOT in to_remove
+        carpark_all = carpark_all[~carpark_all['CarParkID'].isin(to_remove['CarParkID'])].reset_index()
+   
+        # check percentage of 'good' records
+        new_id_total = len(carpark_all['CarParkID'].unique())
+        percent_good = new_id_total/orig_id_total
+        
+        print("IDs kept: " + str(new_id_total) + "/" + str(orig_id_total))
+
+        # exit the process if data isn't good enough
+        if percent_good < tolerance:
+            sys.exit("This dataset is " + str(percent_good) + " good The tolerance is set to " + str(tolerance) + ".")
         
         # ------------------------------------------------ #
         # CLEAN CARPARK DF

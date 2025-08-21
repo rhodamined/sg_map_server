@@ -4,13 +4,18 @@ Node server for sg map project with Matthew Lau.
 ## Overview
 Express app for circulated-densities mapping project. Runs node-cron in background to log SG Datamall's realtime data APIs. Clients can make RESTful requests to get retrieve data. 
 
-## Setup
+## Setup: node
 - Have node.js installed (developed on v22.14.0)
 - Clone this repo
 - `npm install` to install all packages
 - Configure .env file with an account key for SG Datamall API. Use key `ACCOUNT_KEY`.
 - https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf 
 - See above pdf for API info. 
+
+## Setup: python
+- Have python installed and added to path
+- install pandas library `pip install pandas`
+- Update the python commands in node-cron "scheduler.js" to reflect this python install (e.g. is it `python3 script.py` or `python script.py`?)
 
 ## Run
 - `node index.js` from the root folder to launch the express app. 

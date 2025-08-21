@@ -96,10 +96,10 @@ if __name__ == "__main__":
 
         for file in carpark_directory.iterdir():  
             if file.is_file():  # Check if it's a file
-                mm = file.name.split('.')[0].split('-')[-1]
+                minute = file.name.split('.')[0].split('-')[-1]
                 minute_range = ["00", "15", "30", "45"]  # specifically opt into the timestamps...
 
-                if mm in minute_range:
+                if minute in minute_range:
                     df = read_json_to_pd(file)
                     li.append(df)
                 
@@ -112,6 +112,14 @@ if __name__ == "__main__":
         # Check if each ID has 24hrs of info
         # ingesting more data is good -- sometimes records missing, ends up taking the average over an hour
         # ------------------------------------------------ #
+        # make sure all records are for the correct date
+        yyyy = int(date_str.split('-')[0])
+        dd = int(date_str.split('-')[-1])
+        mo = int(date_str.split('-')[1])
+        carpark_all = carpark_all[carpark_all['year'] == yyyy] 
+        carpark_all = carpark_all[carpark_all['month'] == mo]
+        carpark_all = carpark_all[carpark_all['day'] == dd] 
+        
         # Remove duplicates
         carpark_all.drop_duplicates(subset=['CarParkID', 'LotType', 'hour', 'minute'], keep="first", inplace=True)
         orig_id_total = len(carpark_all['CarParkID'].unique()) # to calculate percentage

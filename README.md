@@ -23,8 +23,5 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 ## Data
 - All logged files save locally to folder /data. `.gitignore` is configured to ignore folder `/data` so as not to push 100s of MB to this repo. Please do not change this behavior; if you need to add a reference file, put it in /ref. 
 
-
 ## Usage
-- `/update` to have the server refresh data
-- `/kml/x` where x is 1 through 332 to retrieve data for each kml
-- `/region/y` where y is 0 through 4 to retrieve data for each administrative region
+- `/hello` to GET json file for yesterday's date. If no such file exists, serve up a contingency file.

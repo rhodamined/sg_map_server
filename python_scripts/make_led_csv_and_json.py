@@ -25,10 +25,10 @@ if __name__ == "__main__":
         # Received date to process as an argument in format 'yyyy-mm-dd' e.g. '2025-08-11' for August 11, 2025
         date_str = sys.argv[1]
         
-        # directory of carparks to iterate over
+        # directory of carpark data to iterate over
         carpark_directory = Path('./data/carpark_availability/' + date_str)  # set directory path
         
-        # directory of carparks to iterate over
+        # directory of subway data to iterate over
         subway_directory = Path('./data/subway_crowdedness/' + date_str)  # set directory path
 
         # path to ref: carpark IDs to kml

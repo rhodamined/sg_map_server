@@ -206,8 +206,9 @@ if __name__ == "__main__":
         # ------------------------------------------------ #
         # REMAP <AVAIL PER KML> TO <LED VALUES 0-255>
         # ------------------------------------------------ #
-        carpark_summary['led_val'] = carpark_summary['avail_norm'] * 255
-        carpark_summary['led_val'] = carpark_summary['led_val'].astype('int64')
+        # carpark_summary['carpark_led_val'] = carpark_summary['avail_norm'] * 255      # 255 is 'most available'
+        carpark_summary['carpark_led_val'] = (1-carpark_summary['avail_norm']) * 255    # 255 is 'least available'
+        carpark_summary['carpark_led_val'] = carpark_summary['carpark_led_val'].astype('int64')
         
         
         # ------------------------------------------------ #
@@ -302,6 +303,9 @@ if __name__ == "__main__":
         subway_summary = pd.DataFrame(subway_summary)
         subway_summary = subway_summary.reset_index()
         
+        # normalize crowd mean
+        subway_summary['crowd_mean'] = subway_summary['crowd_mean'] / (subway_summary['crowd_mean'].max() - (subway_summary['crowd_mean'].min()))
+        
         # add LED vals by remapping normalized val of 0 - 1 to 0-255 (inverted -- so more avail is more dim)
         subway_summary['subway_led_val'] = subway_summary['crowd_mean'] * 255 
         subway_summary['subway_led_val'] = subway_summary['subway_led_val'].astype('int64')
@@ -322,14 +326,14 @@ if __name__ == "__main__":
         # CLEAN & REORDER DATAFRAME
         # ------------------------------------------------ #
         # fill NAs with 0s 
-        summary_df['led_val'] = summary_df['led_val'].fillna(0)
+        summary_df['carpark_led_val'] = summary_df['carpark_led_val'].fillna(0)
         summary_df['subway_led_val'] = summary_df['subway_led_val'].fillna(0)
         summary_df['hour'] = summary_df['hour'].fillna(0)
         summary_df['avail_norm'] = summary_df['avail_norm'].fillna(0)
         summary_df['crowd_mean'] = summary_df['crowd_mean'].fillna(0)
         
         # recast floats to ints
-        summary_df['led_val'] = summary_df['led_val'].astype('int64')
+        summary_df['carpark_led_val'] = summary_df['carpark_led_val'].astype('int64')
         summary_df['subway_led_val'] = summary_df['subway_led_val'].astype('int64')
         summary_df['hour'] = summary_df['hour'].astype('int64')
 
@@ -337,15 +341,15 @@ if __name__ == "__main__":
         summary_df = summary_df.sort_values(by=['region_no', 'led_no', 'hour'])
 
         # reorder
-        summary_df = summary_df[['region_no', 'region_n', 'led_no', 'hour', 'avail_norm', 'crowd_mean', 'led_val', 'subway_led_val', 'subzone_no', 'subzone_n', 'subzone_kml']]
+        summary_df = summary_df[['region_no', 'region_n', 'led_no', 'hour', 'avail_norm', 'carpark_led_val', 'crowd_mean', 'subway_led_val', 'subzone_no', 'subzone_n', 'subzone_kml']]
         summary_df = summary_df.reset_index(drop=True)
 
         # ------------------------------------------------ #
         # WRITE DATAFRAME TO CSV
         # ------------------------------------------------ #
+        # csv is for Christina to look at, JSON is for Matthew
+        # column names are tidy & more or less match with jupyter workbooks
         summary_df.to_csv(path_to_save_csv, index = False)
-
-        # print(summary_df[:4])
         
         # ------------------------------------------------ #
         # FORMAT TO DICT FOR JSON 
@@ -358,19 +362,17 @@ if __name__ == "__main__":
         
         df = df.groupby(['region_n', 'region_no', 'led_no','subzone_no', 'subzone_n', 'subzone_kml']).agg(
             hour = ('hour', f),  
-            led_val = ('led_val', f), 
+            carpark_led_val = ('carpark_led_val', f), 
             subway_led_val = ('subway_led_val', f),  
             avail_norm = ('avail_norm', f),   
             crowd_mean = ('crowd_mean', f),
         ).reset_index().reindex(df.columns, axis=1)
 
         # choose cols Matthew needs
-        df = df[['region_n', 'led_no', 'led_val', 'subway_led_val', 'subzone_n', 'subzone_kml']] 
+        df = df[['region_n', 'led_no', 'carpark_led_val', 'subway_led_val', 'subzone_n', 'subzone_kml']] 
 
         # rename to Matthew's json format
-        df = df.rename(columns={'led_no': 'led_number', 'led_val': 'carpark', 'subway_led_val': 'mrt', 'subzone_n': 'name', 'subzone_kml': 'kml'})
-        
-        print(df.columns)
+        df = df.rename(columns={'led_no': 'led_number', 'carpark_led_val': 'carpark', 'subway_led_val': 'mrt', 'subzone_n': 'name', 'subzone_kml': 'kml'})
 
         # Group by region and turn rows into a list of dictionaries for each group
         df = df.groupby(['region_n'])[['led_number', 'carpark', 'mrt', 'name', 'kml']].apply(lambda x: x.to_dict(orient='records'))

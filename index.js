@@ -5,6 +5,7 @@
 /* SETUP      
 /* -------------------- */
 
+const fs = require('fs');
 const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -16,13 +17,9 @@ app.use(express.json());
 // Node-cron scheduler, which continues running in background
 // Pulls and saves data every hour
 require("./server/scheduler");
-const p = require("./old/process");
 
 // Help with time formating
 const sgtime = require("./server/sgtime");
-
-// file system
-const fs = require('fs');
 
 
 
@@ -35,7 +32,7 @@ app.listen(port, async () => {
 })
 
 
-// 
+// GET JSON
 app.get('/hello', async (req, res) => {
   console.log("/hello");
 
@@ -57,14 +54,3 @@ app.get('/hello', async (req, res) => {
 
 });
 
-
-
-// get single character info using character NUMBER
-// Updated 12/26/23
-// app.get('/region/:region', async (req, res) => {
-//   const region = parseInt(req.params.region);
-//   const val = global.avails['raw']['by_region'][region];
-
-//   console.log("region: " + region + ", availability: " + val);
-//   res.json(val);
-// });

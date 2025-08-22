@@ -21,7 +21,7 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 - Update the python commands in node-cron "scheduler.js" to reflect this python install (e.g. is it `python3 script.py` or `python script.py`?)
 
 ## Run
-- `npm run start` from the root folder to launch the express app using pm2. All pm2 commands must be fired using npm scripts for some reason. See package.json for scripts. 
+- `npm run start` from the root folder to launch the express app using pm2. All pm2 commands must be fired using npm scripts because pm2 is is included as a local node module through npm and not a global install. If desired, you can install pm2 globally instead. See package.json for scripts. 
 
 ## Data
 - All logged files save locally to folder /data. `.gitignore` is configured to ignore folder `/data` so as not to push 100s of MB to this repo. Please do not change this behavior; if you need to add a reference file, put it in /ref. 

@@ -1,3 +1,8 @@
+# ------------------------------------------------ #
+# PARSE THROUGH A DIRECTORY'S WORTH OF DATA
+# WRITE TO CSV AND JSON
+# ------------------------------------------------ #
+
 # --- imports ---- #
 import datetime
 import sys

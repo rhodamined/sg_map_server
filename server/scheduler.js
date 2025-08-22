@@ -1,9 +1,14 @@
 /* ------------------------------------------------ */
 /* Node-Cron scheduler to pull & save JSON    
 /* ------------------------------------------------ */
-// Pull all data from API every hour, parse into single json file
-// Create folder for the day and write file
-// File name to include timestamp of the hour
+// saveAPIDataToJSON: 
+// - Pull all data from API every hour, parse into single json file
+// - Create folder for the day and write file
+// - File name to include timestamp of the hour
+
+// runPythonScript: 
+// - at 00:01 every day, process entire previous day's worth of data into single json
+// - GET requests to server return these json files
 
 
 // import my modules
@@ -27,7 +32,7 @@ const { spawn } = require('child_process');
 
 
 /* ------------------------------------------------ */
-/* Scheduler Task   
+/* Schedulers
 /* ------------------------------------------------ */
 // use https://crontab.guru/ to make expression for scheduling
 
@@ -36,6 +41,12 @@ cron.schedule("0,15,30,45 */1 * * *", saveAPIDataToJSON);
 
 // Every day at 00:01, process entire previous day's worth of data into a csv and json
 cron.schedule('1 0 * * *', runPythonScript);
+
+
+
+/* ------------------------------------------------ */
+/* Function: Run Python Script  
+/* ------------------------------------------------ */
 
 // optional to pass date_str
 // if called without an arg, defaults to 'yesterday'
@@ -71,6 +82,10 @@ async function runPythonScript(date_str) {
     
 }
 
+/* ------------------------------------------------ */
+/* Function: make API calls, save to file 
+/* ------------------------------------------------ */
+
 // Save logs to file
 async function saveAPIDataToJSON() {
 
@@ -103,13 +118,14 @@ async function saveAPIDataToJSON() {
 
 }
 
+/* ------------------------------------------------ */
+/* Helpers / Testers  
+/* ------------------------------------------------ */
 
 // Tester task
 async function task() {
     console.log("Running a scheduled job at " + new Date());
 }
-
-
 
 // fs-extra library 
 // outputJson will create directories if they don't already exist
@@ -123,7 +139,6 @@ async function writeFile (file_str, payload) {
     console.error(err)
   }
 }
-
 
 function getTimestampString() {
     const d = sgtime.getSGDate();

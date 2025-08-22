@@ -9,7 +9,8 @@ module.exports = {
 }
 
 /* ------------------------------------------------ */
-/* Cast all date time to Singapore time (SST)      
+/* Cast all date time to Singapore time (SST)
+/* Can also be used to format date strings      
 /* ------------------------------------------------ */
 
 function getSGDate() {

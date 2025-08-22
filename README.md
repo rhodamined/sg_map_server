@@ -11,6 +11,9 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 - Configure .env file with an account key for SG Datamall API. Use key `ACCOUNT_KEY`.
 - https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf 
 - See above pdf for API info. 
+- Uses cron-tab to schedule carpark and subway data to the /data folder
+- Uses cron-tab to schedule processing of a full day's data at 00:05 every day
+- Uses pm2 to manage the app and restart on a daily basis (trying to circumvent the server hanging onto api calls)
 
 ## Setup: python
 - Have python installed and added to path
@@ -18,7 +21,7 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 - Update the python commands in node-cron "scheduler.js" to reflect this python install (e.g. is it `python3 script.py` or `python script.py`?)
 
 ## Run
-- `node index.js` from the root folder to launch the express app. 
+- `npm run start` from the root folder to launch the express app using pm2. All pm2 commands must be fired using npm scripts for some reason. See package.json for scripts. 
 
 ## Data
 - All logged files save locally to folder /data. `.gitignore` is configured to ignore folder `/data` so as not to push 100s of MB to this repo. Please do not change this behavior; if you need to add a reference file, put it in /ref. 

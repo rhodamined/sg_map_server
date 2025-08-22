@@ -5,7 +5,6 @@
 
 # Data
 /data
-/output
 *.geojson
 
 # MAC

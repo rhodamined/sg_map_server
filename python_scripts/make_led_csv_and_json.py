@@ -57,6 +57,9 @@ if __name__ == "__main__":
         # ------------------------------------------------ #
         # CONFIG TOLERANCE
         # ------------------------------------------------ #
+        # percentage of 'incomplete' records that is acceptable to continue
+        # if does not meet this threshold, this script exits and no file is made
+        # and server will serve up default contingency file instead
         tolerance = 0.8
         
         # ------------------------------------------------ #

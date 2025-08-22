@@ -44,7 +44,7 @@ app.get('/hello', async (req, res) => {
   const filePath = __dirname + `/output/json/${yyyymmdd}.json`;
 
   // if no file exists for date string, serve up a hard-coded file with good data
-  const contingency = '2025-08-11' // fake it
+  const contingency = '2025-08-19' // fake it with a known 'good day'
 
   fs.access(filePath, fs.constants.F_OK, (err) => {
       if (err) {

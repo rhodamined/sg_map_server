@@ -316,7 +316,7 @@ if __name__ == "__main__":
         summary_df = carpark_summary.merge(led_ref, how="right", on="subzone_kml")
         
         # merge with subways; similarly may have NAs
-        summary_df = summary_df.merge(summary_df, how="right")
+        summary_df = subway_summary.merge(summary_df, how="right")
 
         # ------------------------------------------------ #
         # CLEAN & REORDER DATAFRAME
@@ -365,11 +365,13 @@ if __name__ == "__main__":
         ).reset_index().reindex(df.columns, axis=1)
 
         # choose cols Matthew needs
-        df = df[['region_n', 'led_no', 'led_val', 'subzone_n', 'subzone_kml']] 
+        df = df[['region_n', 'led_no', 'led_val', 'subway_led_val', 'subzone_n', 'subzone_kml']] 
 
         # rename to Matthew's json format
         df = df.rename(columns={'led_no': 'led_number', 'led_val': 'carpark', 'subway_led_val': 'mrt', 'subzone_n': 'name', 'subzone_kml': 'kml'})
         
+        print(df.columns)
+
         # Group by region and turn rows into a list of dictionaries for each group
         df = df.groupby(['region_n'])[['led_number', 'carpark', 'mrt', 'name', 'kml']].apply(lambda x: x.to_dict(orient='records'))
         df = df.reset_index()

@@ -22,7 +22,7 @@ const { spawn } = require('child_process');
 // IIFE FOR TESTING
 (async function() {
     console.log("IIFE");
-    runPythonScript("2025-08-11");
+    runPythonScript("2025-08-19");
 })();
 
 
@@ -52,7 +52,7 @@ async function runPythonScript(date_str) {
     // Yesterday
 
     // Spawn a child process to execute the Python script
-    const pythonProcess = spawn('python3', ['./python_scripts/carpark_led_csv_and_json.py', yyyymmdd]);
+    const pythonProcess = spawn('python3', ['./python_scripts/make_led_csv_and_json.py', yyyymmdd]);
 
     // Handle stdout from the Python script
     pythonProcess.stdout.on('data', (data) => {

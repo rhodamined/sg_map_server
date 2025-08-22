@@ -20,10 +20,10 @@ const { spawn } = require('child_process');
 
 
 // IIFE FOR TESTING
-(async function() {
-    console.log("IIFE");
-    runPythonScript("2025-08-19");
-})();
+// (async function() {
+//     console.log("IIFE");
+//     runPythonScript("2025-08-19");
+// })();
 
 
 /* ------------------------------------------------ */

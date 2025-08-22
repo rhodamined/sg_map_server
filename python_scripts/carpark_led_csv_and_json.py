@@ -49,7 +49,7 @@ if __name__ == "__main__":
         tolerance = 0.8
         
         # ------------------------------------------------ #
-        # READ FILES
+        # READ CARPARK FILES
         # ------------------------------------------------ #
         # Open the JSON file in read mode ('r')
         # Process it to add time info from file string
@@ -132,7 +132,7 @@ if __name__ == "__main__":
         to_remove = to_remove.reset_index()
 
         # Filter carpark_all to keep only rows where carpark id is NOT in to_remove
-        carpark_all = carpark_all[~carpark_all['CarParkID'].isin(to_remove['CarParkID'])].reset_index()
+        carpark_all = carpark_all[~carpark_all['CarParkID'].isin(to_remove['CarParkID'])].reset_index(drop=True)
    
         # check percentage of 'good' records
         new_id_total = len(carpark_all['CarParkID'].unique())

@@ -37,7 +37,7 @@ async function getAllCarparks() {
     // iterate over dataset
     skip += 500
     chances++
-  } while (carparks.length % 500 == 0 && chances < 3)
+  } while (carparks.length % 500 == 0 && chances < 7) // expected ~2800 records; chances needs to be at least 2800/500 == ~6
 
   return carparks
 }

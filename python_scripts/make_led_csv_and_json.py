@@ -55,6 +55,12 @@ if __name__ == "__main__":
         path_to_output_log = './output/log.txt'
         
         # ------------------------------------------------ #
+        # START LOG
+        # ------------------------------------------------ #
+        with open(path_to_output_log, "a") as f:
+            f.write(f"--\nProcess started at {datetime.datetime.now()}. Date provided: {date_str}\n")
+        
+        # ------------------------------------------------ #
         # CONFIG TOLERANCE
         # ------------------------------------------------ #
         # percentage of 'incomplete' records that is acceptable to continue
@@ -152,11 +158,23 @@ if __name__ == "__main__":
         new_id_total = len(carpark_all['CarParkID'].unique())
         percent_good = new_id_total/orig_id_total
         
+        # LOG
         print("Carpark IDs kept: " + str(new_id_total) + "/" + str(orig_id_total))
+        
+        with open(path_to_output_log, "a") as f:
+            f.write(f"Carpark IDs kept: " + str(new_id_total) + "/" + str(orig_id_total) + "\n")
+        
 
         # exit the process if data isn't good enough
         if percent_good < tolerance:
-            sys.exit("This carpark dataset is " + str(percent_good) + " good The tolerance is set to " + str(tolerance) + ".")
+            # write error to log
+            with open(path_to_output_log, "a") as f:
+                # f.write(f"Date provided: {sys.argv[1]}\n")
+                f.write(f"This carpark dataset is " + str(percent_good) + " good. The tolerance is set to " + str(tolerance) + ".\n")
+                f.write(f"Python script QUIT at: {datetime.datetime.now()}\n\n")
+                
+            # exit script
+            sys.exit("This carpark dataset is " + str(percent_good) + " good. The tolerance is set to " + str(tolerance) + ".")
         
         # ------------------------------------------------ #
         # CLEAN CARPARK DF
@@ -271,11 +289,19 @@ if __name__ == "__main__":
         new_id_total = len(subway_all['Station'].unique())
         percent_good = new_id_total/orig_id_total
         
+        # log
         print("Subway stations kept: " + str(new_id_total) + "/" + str(orig_id_total))
+        
+        with open(path_to_output_log, "a") as f:
+            f.write(f"Subway stations kept: " + str(new_id_total) + "/" + str(orig_id_total) + "\n")
 
         # exit the process if data isn't good enough
         if percent_good < tolerance:
-            sys.exit("This subway dataset is " + str(percent_good) + " good The tolerance is set to " + str(tolerance) + ".")
+            with open(path_to_output_log, "a") as f:
+                # f.write(f"Date provided: {sys.argv[1]}\n")
+                f.write(f"This subway dataset is " + str(percent_good) + " good. The tolerance is set to " + str(tolerance) + ".\n")
+                f.write(f"Python script QUIT at: {datetime.datetime.now()}\n\n")
+            sys.exit("This subway dataset is " + str(percent_good) + " good. The tolerance is set to " + str(tolerance) + ".")
         
         # ------------------------------------------------ #
         # CLEAN SUBWAY DF
@@ -405,8 +431,8 @@ if __name__ == "__main__":
         # WRITE LOGS
         # ------------------------------------------------ #
         with open(path_to_output_log, "a") as f:
-            f.write(f"Date provided: {sys.argv[1]}\n")
-            f.write(f"Python script executed at: {datetime.datetime.now()}\n")
+            # f.write(f"Date provided: {sys.argv[1]}\n")
+            f.write(f"Python script COMPLETED at: {datetime.datetime.now()}\n\n")
     else:
         print("No arguments provided. Please supply a date in format YYYY-MM-DD.")
 

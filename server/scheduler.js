@@ -25,10 +25,11 @@ const { spawn } = require('child_process');
 
 
 // IIFE FOR TESTING
-// (async function() {
-//     console.log("IIFE");
-//     runPythonScript("2025-08-19");
-// })();
+(async function() {
+    console.log("IIFE");
+    runPythonScript("2025-08-22");
+    // await saveAPIDataToJSON();
+})();
 
 
 /* ------------------------------------------------ */
@@ -93,28 +94,56 @@ async function saveAPIDataToJSON() {
     // Differentiated only by file tree
     const ts_str = getTimestampString();
 
-    /* ------ CARPARK AVAILABILITY ------- */
-    let fileStr = `./data/carpark_availability/${ts_str}.json`;
 
-    console.log("Logging carpark availability at " + new Date());
+    /* ------ SETUP ------- */
+    const log_path = "./data/log.txt";
+    const carpark_path = `./data/carpark_availability/${ts_str}.json`;
+    const subway_path = `./data/subway_crowdedness/${ts_str}.json`;
+    
+    // delineate log
+    await updateLogFile(log_path, "--\n");
+
+
+    /* ------ CARPARK AVAILABILITY ------- */
+    console.log("Started pulling carpark availability at " + new Date());
+    await updateLogFile(log_path, "Started pulling carpark availability at " + new Date() + "\n");
 
     let data = await carparks.getAllCarparks();
-    const payload_carpark = {timestamp: sgtime.getISOString(), value: data} // timestamps when request complete
-    await writeFile(fileStr, payload_carpark);
 
-    console.log("Carpark log completed at " + new Date());
+    // IF ERROR -- hacky kind of handling
+    if (typeof data == "string") {
+      console.log(data);
+      await updateLogFile(log_path, `${data}\n`);
 
-    
+    } 
+    else { // WORKING GOOD
+      const payload_carpark = {timestamp: sgtime.getISOString(), value: data}; // timestamps when request complete
+      await writeJSONFile(carpark_path, payload_carpark);
+  
+      console.log("Carpark log completed at " + new Date());
+      await updateLogFile(log_path, "Carpark log completed at " + new Date() + " with {" + data.length + "} records \n");
+    }
+
+
     /* ------ SUBWAY CROWDEDNESS ------- */
-    fileStr = `./data/subway_crowdedness/${ts_str}.json`;
-
-    console.log("Logging subway crowdedness at " + new Date());
+    console.log("Started pulling subway station crowdedness at " + new Date());
+    await updateLogFile(log_path, "Started pulling subway station crowdedness at " + new Date() + "\n");
 
     data = await subway.getAllSubway();
-    const payload_subway = {timestamp: sgtime.getISOString(), value: data} // timestamps when request complete
-    await writeFile(fileStr, payload_subway);
 
-    console.log("Subway crowdedness log completed at " + new Date());
+    // IF ERROR -- hacky kind of handling...
+    if (typeof data == "string") {
+      console.log(data);
+      await updateLogFile(log_path, `${data}\n`);
+
+    } 
+    else { // IF WORKING GOOD
+      const payload_subway = {timestamp: sgtime.getISOString(), value: data}; // timestamps when request complete
+      await writeJSONFile(subway_path, payload_subway);
+  
+      console.log("Subway station crowdedness json completed at " + new Date());
+      await updateLogFile(log_path, "Subway station crowdedness json completed at " + new Date() + " with {" + data.length + "} records. \n");
+    }
 
 }
 
@@ -130,15 +159,26 @@ async function task() {
 // fs-extra library 
 // outputJson will create directories if they don't already exist
 // payload expected to be in javascript object format
-async function writeFile (file_str, payload) {
+async function writeJSONFile (file_path, payload) {
   try {
     // output to file
-    await fse.outputJson(file_str, payload)
+    await fse.outputJson(file_path, payload);
 
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
 }
+
+async function updateLogFile (log_path, payload) {
+  try {
+    await fse.appendFile(log_path, payload);
+    // console.log('Updated ' + log_path + ' successfully.');
+  } catch (err) {
+    console.error('Error appending to ' + log_path + ':', err);
+  }
+
+}
+
 
 function getTimestampString() {
     const d = sgtime.getSGDate();

@@ -21,25 +21,31 @@ async function getAllCarparks() {
     let url =
       "https://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2"
     if (skip > 0) {
-      url = url + "?$skip=" + skip
+      url = url + "?$skip=" + skip;
     }
 
     // fetch
-    const res = await fetchCarpark(url)
-    const data = res.value // unnests and removes metadata; this is an array of objects
+    const res = await fetchCarpark(url);
 
-    // console.log(data);
+    if (res) {
+      const data = res.value; // unnests and removes metadata; this is an array of objects
+  
+      // console.log(data);
+  
+      // concat arrays of data
+      carparks.push(...data);
+      console.log(carparks.length);
+  
+      // iterate over dataset
+      skip += 500;
+      chances++;
 
-    // concat arrays of data
-    carparks.push(...data)
-    console.log(carparks.length)
-
-    // iterate over dataset
-    skip += 500
-    chances++
+    } else {
+      return "An error has occurred & carpark data could not be fetched. Stopped at skip=" + skip + " and {" + carparks.length + "} records";
+    }
   } while (carparks.length % 500 == 0 && chances < 7) // expected ~2800 records; chances needs to be at least 2800/500 == ~6
 
-  return carparks
+  return carparks;
 }
 
 /* ---- FETCH FROM API ---- */
@@ -56,9 +62,25 @@ async function fetchCarpark(url) {
   return await fetch(url, requestOptions)
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}\n`)
       }
       return response.json()
     })
-    .catch((error) => console.error(error))
+    .catch((error) => { 
+      updateLogFile(log_path, error.toString());
+      console.error(error)
+    })
+}
+
+
+/* ---- UPDATE ./data/log.txt ---- */
+async function updateLogFile (log_path, payload) {
+
+  try {
+    await fse.appendFile(log_path, payload);
+    // console.log('Updated ' + log_path + ' successfully.');
+  } catch (err) {
+    console.error('Error appending to ' + log_path + ':', err);
+  }
+
 }

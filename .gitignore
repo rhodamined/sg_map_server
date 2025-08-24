@@ -12,6 +12,7 @@
 .DS_Store
 
 # Logs
+lot.txt
 logs
 *.log
 npm-debug.log*

@@ -25,11 +25,11 @@ const sgtime = require("./server/sgtime")
 /* -------------------- */
 app.listen(port, async () => {
   console.log("Server running at port: " + port)
-})
+});
 
 app.get("/", async (req, res) => {
   res.status(200).json({ status: "online" })
-})
+});
 
 // GET JSON
 app.get("/hello", async (req, res) => {
@@ -49,6 +49,45 @@ app.get("/hello", async (req, res) => {
         err
       )
       res.sendFile(__dirname + `/output/json/${contingency}.json`)
+    } else {
+      res.sendFile(filePath)
+    }
+  })
+});
+
+
+// GET DATA LOG (PULLING FROM API)
+app.get("/datalog", async (req, res) => {
+  console.log("/datalog")
+
+  const filePath = __dirname + `/data/log.txt`
+
+
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.error(
+        `${filePath} does not exist.`,
+        err
+      )
+    } else {
+      res.sendFile(filePath)
+    }
+  })
+});
+
+// GET OUTPUT LOG (PARSING DATA & WRITING TO JSON)
+app.get("/outputlog", async (req, res) => {
+  console.log("/outputlog")
+
+  const filePath = __dirname + `/output/log.txt`
+
+
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.error(
+        `${filePath} does not exist.`,
+        err
+      )
     } else {
       res.sendFile(filePath)
     }

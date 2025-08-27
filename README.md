@@ -11,8 +11,9 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 - Configure .env file with an account key for SG Datamall API. Use key `ACCOUNT_KEY`.
 - https://datamall.lta.gov.sg/content/dam/datamall/datasets/LTA_DataMall_API_User_Guide.pdf 
 - See above pdf for API info. See Matthew's documentation for his key.
-- Uses cron-tab to schedule carpark and subway data to the /data folder
-- Uses cron-tab to schedule processing of a full day's data at 00:01 every day
+- Uses cron-tab to schedule carpark and subway data to the /data folder. Logs performance to /data/log.txt
+- Uses cron-tab to schedule processing of a full day's data at 00:01 every day using python script. Logs performance to /output/log.txt
+- Uses cron-tab to schedule clearing of ./data/log.txt at 23:55 every day. 
 - Uses pm2 to manage the app and restart on a daily basis (trying to circumvent the server hanging onto api calls)
 
 ## Setup: python

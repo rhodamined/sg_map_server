@@ -28,5 +28,6 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 
 ## Client Usage
 - `/hello` to GET json file for yesterday's date. If no such file exists, serve up a contingency file, currently set to "2025-08-19". 
+- `/hour/0` through `/hour/23` to retrieve same as above, but only for a single hour's worth of data.
 - `/datalog` to GET txt file for log of API pulls from Datamall. Very helpful for troubleshooting... suspect API has unspoken limits.
 - `/outputlog` to GET txt file for log of python script that parses data into the arduino-usable JSON. Use to see which dates have really bad data. 

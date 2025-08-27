@@ -18,7 +18,7 @@ Express app for circulated-densities mapping project. Runs node-cron in backgrou
 ## Setup: python
 - Have python installed and added to path
 - Uses venv to manage python packages
-- `source .venv/bin/activate` to activate venv environment (Linux or macOS)
+- To set up venv, `python3 -m venv .venv`. Then `source .venv/bin/activate` to activate venv environment (Linux or macOS)
 - Install requirements with `pip install -r requirements.txt`
 - Update the python commands in node-cron "scheduler.js" to reflect this python install (e.g. is it `python3 script.py` or `python script.py`?)
 

@@ -63,8 +63,8 @@ async function runPythonScript(date_str) {
     }
     // Yesterday
 
-    // Spawn a child process to execute the Python script
-    const pythonProcess = spawn('python3', ['./python_scripts/make_led_csv_and_json.py', yyyymmdd]);
+    // Spawn a child process to execute the Python script; make explicit path to venv python
+    const pythonProcess = spawn('./.venv/bin/python3', ['./python_scripts/make_led_csv_and_json.py', yyyymmdd]);
 
     // Handle stdout from the Python script
     pythonProcess.stdout.on('data', (data) => {

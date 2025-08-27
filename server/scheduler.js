@@ -25,11 +25,11 @@ const { spawn } = require('child_process');
 
 
 // IIFE FOR TESTING
-(async function() {
-    console.log("IIFE");
-    runPythonScript("2025-08-22");
-    // await saveAPIDataToJSON();
-})();
+// (async function() {
+//     console.log("IIFE");
+//     runPythonScript("2025-08-22");
+//     // await saveAPIDataToJSON();
+// })();
 
 
 /* ------------------------------------------------ */

@@ -43,6 +43,9 @@ cron.schedule("0,15,30,45 */1 * * *", saveAPIDataToJSON);
 // Every day at 00:01, process entire previous day's worth of data into a csv and json
 cron.schedule('1 0 * * *', runPythonScript);
 
+// Every day at 23:55, empty /data/log.txt
+cron.schedule('55 23 * * *', clearDataLog);
+
 
 
 /* ------------------------------------------------ */
@@ -159,7 +162,7 @@ async function task() {
 // fs-extra library 
 // outputJson will create directories if they don't already exist
 // payload expected to be in javascript object format
-async function writeJSONFile (file_path, payload) {
+async function writeJSONFile(file_path, payload) {
   try {
     // output to file
     await fse.outputJson(file_path, payload);
@@ -169,14 +172,24 @@ async function writeJSONFile (file_path, payload) {
   }
 }
 
-async function updateLogFile (log_path, payload) {
+// Append to file
+async function updateLogFile(log_path, payload) {
   try {
     await fse.appendFile(log_path, payload);
     // console.log('Updated ' + log_path + ' successfully.');
   } catch (err) {
     console.error('Error appending to ' + log_path + ':', err);
   }
+}
 
+// overwrite ./data/log.txt with empty string
+async function clearDataLog() {
+  try {
+    await fs.outputFile("./data/log.txt", '');
+
+  } catch (err) {
+    console.error("Error clearing file: " + file_path, err)
+  }
 }
 
 

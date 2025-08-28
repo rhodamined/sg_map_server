@@ -25,12 +25,13 @@ const { spawn } = require('child_process');
 
 
 // IIFE FOR TESTING
-// (async function() {
-//     console.log("IIFE");
+(async function() {
+    console.log("IIFE");
     // runPythonScript("2025-08-22");
+    runPythonScript();
     // await saveAPIDataToJSON();
     // clearDataLog();
-// })();
+})();
 
 
 /* ------------------------------------------------ */
@@ -63,9 +64,11 @@ async function runPythonScript(date_str) {
 
     let yyyymmdd;
     if (!date_str) {
+      console.log("no date_str, get Yesterday");
       const yesterday = new Date(Date.now() - 86400000);
       yyyymmdd = sgtime.getYYYYMMDD(yesterday);  
     } else {
+      console.log("yes date str: " + date_str)
       yyyymmdd = date_str;
     }
 

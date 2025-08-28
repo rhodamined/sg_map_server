@@ -25,11 +25,12 @@ const { spawn } = require('child_process');
 
 
 // IIFE FOR TESTING
-// (async function() {
-//     console.log("IIFE");
-//     runPythonScript("2025-08-22");
-//     // await saveAPIDataToJSON();
-// })();
+(async function() {
+    console.log("IIFE");
+    // runPythonScript("2025-08-22");
+    // await saveAPIDataToJSON();
+    clearDataLog();
+})();
 
 
 /* ------------------------------------------------ */
@@ -184,8 +185,9 @@ async function updateLogFile(log_path, payload) {
 
 // overwrite ./data/log.txt with empty string
 async function clearDataLog() {
+  const file_path = "./data/log.txt";
   try {
-    await fs.outputFile("./data/log.txt", '');
+    await fse.outputFile(file_path, '');
 
   } catch (err) {
     console.error("Error clearing file: " + file_path, err)

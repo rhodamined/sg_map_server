@@ -50,7 +50,7 @@ cron.schedule('55 23 * * *', clearDataLog);
 
 // for testing only
 // Every day at 00:01, process entire previous day's worth of data into a csv and json
-cron.schedule('43 2 * * *', runPythonScript);
+cron.schedule('4 2 * * *', runPythonScript);
 
 
 /* ------------------------------------------------ */
@@ -61,12 +61,14 @@ cron.schedule('43 2 * * *', runPythonScript);
 // if called without an arg, defaults to 'yesterday'
 async function runPythonScript(date_str) {
     console.log('Running Python script...');
+    console.log("before if statement date_str " + date_str);
 
     let yyyymmdd;
     if (!date_str) {
       console.log("no date_str, get Yesterday");
       const yesterday = new Date(Date.now() - 86400000);
       yyyymmdd = sgtime.getYYYYMMDD(yesterday);  
+      console.log("yyyymmdd: " + yyyymmdd); 
     } else {
       console.log("yes date str: " + date_str)
       yyyymmdd = date_str;

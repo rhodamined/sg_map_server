@@ -50,7 +50,7 @@ cron.schedule('55 23 * * *', clearDataLog);
 
 // for testing only
 // Every day at 00:01, process entire previous day's worth of data into a csv and json
-cron.schedule('35 2 * * *', runPythonScript);
+cron.schedule('43 2 * * *', runPythonScript);
 
 
 /* ------------------------------------------------ */

@@ -47,6 +47,11 @@ cron.schedule('1 0 * * *', runPythonScript);
 // Every day at 23:55, empty /data/log.txt
 cron.schedule('55 23 * * *', clearDataLog);
 
+// for testing only
+// Every day at 00:01, process entire previous day's worth of data into a csv and json
+cron.schedule('25 2 * * *', runPythonScript);
+// Every day at 23:55, empty /data/log.txt
+cron.schedule('26 2 * * *', clearDataLog);
 
 
 /* ------------------------------------------------ */

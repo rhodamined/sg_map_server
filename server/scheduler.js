@@ -25,13 +25,13 @@ const { spawn } = require('child_process');
 
 
 // IIFE FOR TESTING
-(async function() {
-    console.log("IIFE");
-    // runPythonScript("2025-08-22");
-    runPythonScript();
-    // await saveAPIDataToJSON();
-    // clearDataLog();
-})();
+// (async function() {
+//     console.log("IIFE");
+//     // runPythonScript("2025-08-22");
+//     runPythonScript();
+//     // await saveAPIDataToJSON();
+//     // clearDataLog();
+// })();
 
 
 /* ------------------------------------------------ */
@@ -48,10 +48,6 @@ cron.schedule('1 0 * * *', runPythonScript);
 // Every day at 23:55, empty /data/log.txt
 cron.schedule('55 23 * * *', clearDataLog);
 
-// for testing only
-// Every day at 00:01, process entire previous day's worth of data into a csv and json
-cron.schedule('55 2 * * *', runPythonScript);
-
 
 /* ------------------------------------------------ */
 /* Function: Run Python Script  
@@ -61,23 +57,25 @@ cron.schedule('55 2 * * *', runPythonScript);
 // if called without an arg, defaults to 'yesterday'
 async function runPythonScript(date_str) {
     console.log('Running Python script...');
-    console.log("before if statement date_str " + date_str);
 
+    // Handle yesterday
     let yyyymmdd;
-    if (!date_str || ((typeof date_str) != "string")) {
-      console.log("no date_str, get Yesterday");
+
+    // this single boolean check caused a lot of grief... 
+    // when called within cron-job, a blank [object Object] is passed, which passes !date_str
+    // need to make explicit expecting a string
+    // javascript lets u hang urself ugh
+    if (!date_str || ((typeof date_str) != "string")) { 
       const yesterday = new Date(Date.now() - 86400000);
       yyyymmdd = sgtime.getYYYYMMDD(yesterday);  
-      console.log("yyyymmdd: " + yyyymmdd); 
     } else {
-      console.log("yes date str: " + date_str)
       yyyymmdd = date_str;
     }
 
-    const log_path = "./output/log.txt";
-    await updateLogFile(log_path, "date_str: " + date_str + "\n");
+    // log for monitoring; python script also writes to ./output/log.txt
+    // const log_path = "./output/log.txt";
+    // await updateLogFile(log_path, "Received date_str: " + date_str + "\n");
 
-    // Yesterday
 
     // Spawn a child process to execute the Python script; make explicit path to venv python
     const pythonProcess = spawn('./.venv/bin/python3', ['./python_scripts/make_led_csv_and_json.py', yyyymmdd]);

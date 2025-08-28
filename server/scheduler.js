@@ -27,9 +27,9 @@ const { spawn } = require('child_process');
 // IIFE FOR TESTING
 // (async function() {
 //     console.log("IIFE");
-//     // runPythonScript("2025-08-22");
-//     // await saveAPIDataToJSON();
-//     clearDataLog();
+    // runPythonScript("2025-08-22");
+    // await saveAPIDataToJSON();
+    // clearDataLog();
 // })();
 
 
@@ -49,9 +49,7 @@ cron.schedule('55 23 * * *', clearDataLog);
 
 // for testing only
 // Every day at 00:01, process entire previous day's worth of data into a csv and json
-cron.schedule('25 2 * * *', runPythonScript);
-// Every day at 23:55, empty /data/log.txt
-cron.schedule('26 2 * * *', clearDataLog);
+cron.schedule('35 2 * * *', runPythonScript);
 
 
 /* ------------------------------------------------ */
@@ -70,6 +68,10 @@ async function runPythonScript(date_str) {
     } else {
       yyyymmdd = date_str;
     }
+
+    const log_path = "./output/log.txt";
+    await updateLogFile(log_path, "date_str: " + date_str + "\n");
+
     // Yesterday
 
     // Spawn a child process to execute the Python script; make explicit path to venv python
